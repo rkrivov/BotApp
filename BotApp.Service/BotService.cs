@@ -14,7 +14,7 @@ namespace BotApp.Service
 {
     public static class BotService
     {
-        private readonly static string BotToken = "7669862930:AAE3Abc9XQk2QLX_Un50SQ_JG8sW1I-jnZY";
+        private readonly static string BotToken = "<BOT-TOKEN>";
         private readonly static ITelegramClient telegramClient = TelegramService.GetTelegramClient(BotToken);
         public static ITelegramClient TelegramClient => telegramClient.ThrowIfNull();
 
