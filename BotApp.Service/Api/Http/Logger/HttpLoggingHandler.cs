@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotApp.Service.Api.SunrizeSunet.HttpLogger
+namespace BotApp.Service.Api.Http.Logger
 {
     internal class LoggingHandler : DelegatingHandler
     {

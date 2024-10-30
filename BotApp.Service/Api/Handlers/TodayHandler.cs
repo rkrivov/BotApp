@@ -1,14 +1,4 @@
-﻿using BotApp.Service.Api.Extensions;
-using BotApp.Service.Api.Utils;
-using BotApp.Service.Api.Helpers;
-using BotApp.Service.Api.SunrizeSunet;
-using BotApp.Telegram.Api.Handlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace BotApp.Service.Api.Handlers

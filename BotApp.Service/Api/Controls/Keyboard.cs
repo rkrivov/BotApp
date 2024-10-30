@@ -30,6 +30,7 @@ namespace BotApp.Service.Api.Controls
         internal readonly static string COMMAND_STOP_SCHEDULER = "/stop_scheduler";
 
         internal readonly static string COMMAND_SET_TIMEZONE = "/set_timezone";
+        internal readonly static string COMMON_MOONPHASE = "/moon";
 
         internal static InlineKeyboardMarkup MainMenu()
         {
@@ -58,6 +59,10 @@ namespace BotApp.Service.Api.Controls
                     new InlineKeyboardButton[]
                     {
                         InlineKeyboardButton.WithCallbackData(Properties.Resources.StopScheduler, COMMAND_STOP_SCHEDULER),
+                    },
+                    new InlineKeyboardButton[]
+                    {
+                        InlineKeyboardButton.WithCallbackData("Moon phase", COMMON_MOONPHASE),
                     },
                 });
         }

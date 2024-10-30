@@ -1,18 +1,7 @@
 ﻿using BotApp.Service.Api.Exceptions;
-using BotApp.Service.Api.Extensions;
 using BotApp.Service.Api.Utils;
-using BotApp.Service.Api.SunrizeSunet;
-using BotApp.Telegram.Api.Handlers;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace BotApp.Service.Api.Handlers
 {

@@ -1,10 +1,10 @@
 ﻿using BotApp.Service.Api.Exceptions;
 using BotApp.Service.Api.Extensions;
 using BotApp.Service.Api.Utils;
-using BotApp.Service.Api.SunrizeSunet;
 using BotApp.Telegram.Api.Handlers;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using BotApp.Service.Api.Astronomy.Sun;
 
 namespace BotApp.Service.Api.Handlers
 {

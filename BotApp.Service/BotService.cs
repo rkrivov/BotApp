@@ -9,12 +9,15 @@ using System.Runtime.InteropServices;
 using Telegram.Bot;
 using BotApp.Telegram.Api;
 using BotApp.Logger.Api;
+using BotApp.Service.Api.Consts;
 
 namespace BotApp.Service
 {
     public static class BotService
     {
-        private readonly static string BotToken = "7669862930:AAE3Abc9XQk2QLX_Un50SQ_JG8sW1I-jnZY";
+        public static string BotToken { get; set; } = AuthorizeTokensConsts.BotToken;
+
+
         private readonly static ITelegramClient telegramClient = TelegramService.GetTelegramClient(BotToken);
         public static ITelegramClient TelegramClient => telegramClient.ThrowIfNull();
 
@@ -36,6 +39,7 @@ namespace BotApp.Service
                     TelegramClient.AddHandler<StartSchedulerHandler>(Keyboard.COMMAND_START_SCHEDULER);
                     TelegramClient.AddHandler<StopSchedulerHandler>(Keyboard.COMMAND_STOP_SCHEDULER);
                     TelegramClient.AddHandler<SetTimezoneOffsetHandler>(Keyboard.COMMAND_SET_TIMEZONE);
+                    TelegramClient.AddHandler<MoonPhaseHandler>(Keyboard.COMMON_MOONPHASE);
 
                     TelegramClient.AddHandler<ReceivingLocationHandler>(MessageType.Location);
                     TelegramClient.AddHandler<ReceivingLocationHandler>(MessageType.Venue);

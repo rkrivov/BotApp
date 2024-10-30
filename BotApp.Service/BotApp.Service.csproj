@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\libtad-net\TimeAndDate.Services\TimeAndDate.Services.csproj" />
     <ProjectReference Include="..\BotApp.Logger\BotApp.Logger.csproj" />
     <ProjectReference Include="..\BotApp.Telegram\BotApp.Telegram.csproj" />
   </ItemGroup>

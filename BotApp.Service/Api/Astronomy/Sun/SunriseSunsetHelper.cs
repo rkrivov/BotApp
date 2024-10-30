@@ -5,7 +5,7 @@ using BotApp.Service.Api.Enums;
 using BotApp.Service.Api.Extensions;
 using BotApp.Service.Api.Utils;
 using BotApp.Service.Api.Helpers;
-using BotApp.Service.Api.SunrizeSunet.HttpLogger;
+using BotApp.Service.Api.Http.Logger;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Specialized;
@@ -19,7 +19,7 @@ using Telegram.Bot.Types.Enums;
 using BotApp.Telegram.Api.Utils;
 using Microsoft.VisualBasic;
 
-namespace BotApp.Service.Api.SunrizeSunet
+namespace BotApp.Service.Api.Astronomy.Sun
 {
     internal static class SunriseSunsetHelper
     {
@@ -64,9 +64,9 @@ namespace BotApp.Service.Api.SunrizeSunet
             LoggerService.Logger?.LogDebug($"{nameof(dateTime)} = {dateTime.ToString()}");
 #endif
             var buildUri = new UriBuilder(SunriseSunsetConsts.BASE_URL);
-            
+
             buildUri.Path = SunriseSunsetConsts.PATH_JSON;
-            
+
             var culture = CultureInfo.GetCultureInfo("en_US");
 
             NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
@@ -78,7 +78,7 @@ namespace BotApp.Service.Api.SunrizeSunet
             buildUri.Query = queryString.ToString();
 
             var uri = buildUri.Uri;
-            
+
 #if DEBUG
             LoggerService.Logger?.LogDebug($"Uri = {uri.ToString()}");
 #endif
@@ -162,7 +162,7 @@ namespace BotApp.Service.Api.SunrizeSunet
 
         internal static int GetPlanetIndex(DateTime date, int hourIndex, bool isTwilling)
         {
-            var planetsDict = (isTwilling ? PlanetByNightOfWeek : PlanetByDayOfWeek);
+            var planetsDict = isTwilling ? PlanetByNightOfWeek : PlanetByDayOfWeek;
             var planet = GetPlanet(planetsDict, date);
 #if DEBUG
             LoggerService.Logger?.LogDebug($"planet = {planet.ToString()}");
@@ -177,7 +177,7 @@ namespace BotApp.Service.Api.SunrizeSunet
             LoggerService.Logger?.LogDebug($"startIndex = {startIndex} (0..{PlanetsList.Count - 1})");
 #endif
 
-            var index = ((startIndex + hourIndex) % PlanetsList.Count);
+            var index = (startIndex + hourIndex) % PlanetsList.Count;
 
 #if DEBUG
             LoggerService.Logger?.LogDebug($"index = {index} (0..{PlanetsList.Count - 1})");
@@ -257,10 +257,10 @@ namespace BotApp.Service.Api.SunrizeSunet
                 var ticks = delta.Ticks;
                 var hourLengthTicks = ticks / 12;
                 var hourLength = new TimeSpan(hourLengthTicks);
-                var planets = isTwilling ? SunriseSunsetHelper.PlanetByNightOfWeek : SunriseSunsetHelper.PlanetByDayOfWeek;
+                var planets = isTwilling ? PlanetByNightOfWeek : PlanetByDayOfWeek;
 
-                var planetOfDay = SunriseSunsetHelper.GetPlanet(planets, datetime);
-                var planetOfDayImage = SunriseSunsetHelper.GetPlanetImage(planetOfDay);
+                var planetOfDay = GetPlanet(planets, datetime);
+                var planetOfDayImage = GetPlanetImage(planetOfDay);
 
                 stringBuilder.Clear();
 
@@ -299,11 +299,11 @@ namespace BotApp.Service.Api.SunrizeSunet
                         if (index == 0) startDateTime = sunrise;
                         if (index == 11) endDateTime = sunset;
 
-                        var planetOfHour = SunriseSunsetHelper.GetPlanet(datetime, index, isTwilling);
-                        var planetOfHourImage = SunriseSunsetHelper.GetPlanetImage(planetOfHour);
+                        var planetOfHour = GetPlanet(datetime, index, isTwilling);
+                        var planetOfHourImage = GetPlanetImage(planetOfHour);
 
                         stringBuilder.AppendLine(string.Format(Properties.Resources.TableRowFmt,
-                            (index + 1),
+                            index + 1,
                             planetOfHourImage,
                             GetDateTimeString(startDateTime, datetime),
                             GetDateTimeString(endDateTime, datetime)));
@@ -319,7 +319,7 @@ namespace BotApp.Service.Api.SunrizeSunet
                         if (element != Planet.NONE)
                         {
                             stringBuilder.AppendLine(string.Format("{0} - {1}",
-                                SunriseSunsetHelper.GetPlanetImage(element),
+                                GetPlanetImage(element),
                                 element.ToString().ToCamelCase()));
                         }
                     }
@@ -330,7 +330,7 @@ namespace BotApp.Service.Api.SunrizeSunet
                 {
                     if (datetime >= sunrise && datetime <= sunset)
                     {
-                        var index = Math.Max(0, Math.Min(11, ((datetime.Ticks - sunrise.Ticks) / hourLengthTicks)));
+                        var index = Math.Max(0, Math.Min(11, (datetime.Ticks - sunrise.Ticks) / hourLengthTicks));
 
                         var startDateTime = sunrise + new TimeSpan(index * hourLengthTicks);
                         var endDateTime = sunrise + new TimeSpan((index + 1) * hourLengthTicks);
@@ -338,11 +338,11 @@ namespace BotApp.Service.Api.SunrizeSunet
                         if (index == 0) startDateTime = sunrise;
                         if (index == 11) endDateTime = sunset;
 
-                        var planetOfHour = SunriseSunsetHelper.GetPlanet(datetime, (int)index, isTwilling);
-                        var planetImage = SunriseSunsetHelper.GetPlanetImage(planetOfHour);
+                        var planetOfHour = GetPlanet(datetime, (int)index, isTwilling);
+                        var planetImage = GetPlanetImage(planetOfHour);
 
                         stringBuilder.AppendLine(string.Format(Properties.Resources.TableRowFmt,
-                            (index + 1),
+                            index + 1,
                             planetImage,
                             GetDateTimeString(startDateTime, datetime),
                             GetDateTimeString(endDateTime, datetime)));
@@ -351,11 +351,11 @@ namespace BotApp.Service.Api.SunrizeSunet
                         stringBuilder.AppendLine("<code>");
 
                         stringBuilder.AppendLine(string.Format("{0} - {1}",
-                            SunriseSunsetHelper.GetPlanetImage(planetOfDay),
+                            GetPlanetImage(planetOfDay),
                             planetOfDay.ToString().ToCamelCase()));
 
                         stringBuilder.AppendLine(string.Format("{0} - {1}",
-                            SunriseSunsetHelper.GetPlanetImage(planetOfHour),
+                            GetPlanetImage(planetOfHour),
                             planetOfHour.ToString().ToCamelCase()));
 
                         stringBuilder.AppendLine("</code>");
@@ -376,17 +376,17 @@ namespace BotApp.Service.Api.SunrizeSunet
         }
 
         internal static async Task SendSunriseSunsetInfo(
-            ITelegramBotClient botClient, 
-            Update update, 
+            ITelegramBotClient botClient,
+            Update update,
             DateTime datetime,
             bool showFullPlanetsTable,
             CancellationToken cancellationToken)
         {
-            var id = Global.GetId(update);           
+            var id = Global.GetId(update);
             var location = GlobalServiceData.GetLocation(id);
 
-            var address = SunriseSunsetHelper.MakeUri(location ?? throw new ArgumentNullException(), datetime);
-            var sunriseSunset = await SunriseSunsetHelper.GetJSON(address);
+            var address = MakeUri(location ?? throw new ArgumentNullException(), datetime);
+            var sunriseSunset = await GetJSON(address);
 
             if (sunriseSunset == null) return;
             if (sunriseSunset.Sunrise == null) return;
